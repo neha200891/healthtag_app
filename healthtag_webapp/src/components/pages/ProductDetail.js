@@ -3,7 +3,7 @@ import Layout from "../common/Layout";
 
 import OwlCarousel from "react-owl-carousel";
 import { NavLink, useLocation, useNavigate, useParams } from "react-router-dom";
-import { getProductDetails, getProducts, handleAddToCart, handleBuyNowItem } from "../services/productService";
+import { getProductDetails, getProducts, handleAddToCart, handleBuyNowItem, PostReview } from "../services/productService";
 import { sendErrorInfo, sendErrorMessage, sendSuccessMessage } from "../services/userServices";
 import ContectUsSection from "../common/ContectUsSection";
 import IndexProductSlider from "../common/HomePage/IndexProductSlider";
@@ -15,24 +15,49 @@ const ProductDetail = () => {
   const [product, setProductDetails] = useState({});
   const [previewImg, setPreviewImg] = useState("");
   const { productId } = useParams();
+  const [user_rate, setReview] = useState("1");
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
   useEffect(() => {
+    fillstar();
     getProductDetails(productId).then((response) => {
       if (response.status === true) {
+        console.log("data",response.data)
         setProductDetails(response.data);
         setPreviewImg(response.data.productimages && response.data.productimages[0].image);
       }
     });
   }, [productId]);
 
+ 
   const addToCart = () => {
     if (!userDetails?.token) {
       navigate("/login");
       return sendErrorInfo("please login first");
     }
     handleAddToCart({ productId: product.id }).then((response) => {
+      if (response.status == true) {
+        sendSuccessMessage(response);
+      } else {
+        sendErrorMessage(response);
+      }
+    });
+  };
+  const fillstar = () =>{
+   // for(const rating in product) {  
+      // const starPercentage = (product.product_rating) * 100;
+       const starPercentageRounded = `${(Math.round(product.product_rating / 10) * 10)}%`;
+       document.querySelector(`.stars-inner`).style.width = starPercentageRounded; 
+   // }
+  }
+
+
+  const postReview = (e) => {
+    if (!userDetails?.token) {
+      navigate("/login");
+      return sendErrorInfo("please login first");
+    }
+    PostReview({ productId: product.id, rating: user_rate, review: e.target[0].value }).then((response) => {
       if (response.status == true) {
         sendSuccessMessage(response);
       } else {
@@ -48,6 +73,9 @@ const ProductDetail = () => {
     dispatch(buyNowItem(product));
     navigate("/checkout");
   };
+  const savestar = (value) =>{
+    setReview(value)
+  }
   return (
     <Layout>
       <main>
@@ -108,19 +136,84 @@ const ProductDetail = () => {
                     <h2>{product?.name}</h2>
                     <span>{product?.category?.category}</span>
                     <div className="d-flex pt-2">
+       
+          
                       <div className="rating">
+                      <div class="stars-outer">
+  <div class="stars-inner"></div>
+</div>
+                        {/* <i className="fa-solid fa-star" />
                         <i className="fa-solid fa-star" />
                         <i className="fa-solid fa-star" />
                         <i className="fa-solid fa-star" />
-                        <i className="fa-solid fa-star" />
-                        <i className="fa-solid fa-star" />
+                        <i className="fa-solid fa-star" /> */}
                       </div>
-                      <div className="count px-4">4.0 (20)</div>
+                      <div className="count px-4">{product.product_rating} ({product?.total_reviews})</div>
                       <div className="write-review">
-                        <a href="#" title="Write a review">
-                          Write a review
-                        </a>
+                      
+                      {userDetails?.token && (  <a
+                      href="javascript:void(0);"
+                      className="cancel-text"
+                      title="Write a Review"
+                      data-bs-toggle="modal"
+                      data-bs-target="#write-review"
+                    >
+                      Write a Review
+                    </a>)}
                       </div>
+                           {/* cart modal */}
+      <div className="modal fade" id="write-review" tabIndex={-1} aria-labelledby="cartModalLabel" aria-hidden="true">
+        <div className="modal-dialog">
+        <div className="modal-content">
+            <div className="modal-header">
+              <div className="d-flex justify-content-between w-100">
+                <div>
+                  <h5 className="modal-title">Write a Review</h5>
+                </div>
+                <div>
+                  <button type="button" className="btn-close " data-bs-dismiss="modal" aria-label="Close">
+                    <i className="fa-solid fa-xmark" />
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div className="modal-body">
+              <form  onSubmit={postReview}>
+                <div className="row">
+                  <div className="col-lg-12">
+                    <div className="input-field d-flex justify-content-center">
+                      <div className="rating-section">
+                        <i className="fa-solid fa-star" onClick={() => savestar(1)} />
+                        <i className="fa-solid fa-star" onClick={() => savestar(2)}/>
+                        <i className="fa-solid fa-star" onClick={() => savestar(3)}/>
+                        <i className="fa-solid fa-star" onClick={() => savestar(4)}/>
+                        <i className="fa-solid fa-star" onClick={() => savestar(5)}/>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-lg-12">
+                    <div className="input-field">
+                      <textarea
+                        className="form-control"
+                        placeholder="Description"
+                        style={{ height: "180px" }}
+                        defaultValue={""}
+                      />
+                    </div>
+                  </div>
+                  <div className="col-lg-12">
+                    <div className="input-field">
+                      <button className="btn btn-primary" title="Submit Review">
+                        Submit Review
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
                     </div>
                     <div>
                       <p>{product?.short_desc}</p>
@@ -247,15 +340,11 @@ const ProductDetail = () => {
                           data-bs-parent="#accordionExample"
                         >
                           <div className="accordion-body">
-                            <p>
-                              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has
-                              been the industry’s standard dummy text ever since the 1500s, when an unknown printer took
-                              a galley of type and scrambled it to make a type specimen book. It has survived not only
-                              five centuries, but also the leap into electronic typesetting, remaining essentially
-                              unchanged. It was popularised in the 1960s with the release of Letraset sheets containing
-                              Lorem Ipsum passages, and more recently with desktop publishing software like Aldus
-                              PageMaker including versions of Lorem Ipsum.
-                            </p>
+                          {product.user_reviews &&
+                          product?.user_reviews.length > 0 &&
+                          product?.user_reviews.map((item) => (<p>
+                             <span>{item?.review}</span> <span class="float-end">{item?.user.first_name} {item?.user.last_name}</span> 
+                            </p>))}
                           </div>
                         </div>
                       </div>

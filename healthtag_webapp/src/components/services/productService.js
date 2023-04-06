@@ -117,3 +117,12 @@ export const getMyOrders = () => {
     console.log(err);
   }
 };
+
+export const PostReview = (data) => {
+  try {
+    const response = PostDataWithToken(ProductEndPoints.AddUserReview, data);
+    return response;
+  } catch (err) {
+    console.log(err);
+  }
+};

@@ -12,6 +12,7 @@ export const ProductEndPoints = {
   getMyOrders: "product/getMyOrders",
   clearMyCart: "product/clearMyCart",
   changeOrderStatus: "product/changeOrderStatus",
+  AddUserReview: "product/postUserReview",
 };
 
 export const UserEndPoints = {

@@ -722,15 +722,27 @@ exports.AddUserReview = async (req, res, next) => {
       review: joi.string().required(),
     });
     await schema.validateAsync(req.body);
-    const checkReview = await UserReview.findOne({ productId: req.body.productId, userId: req.userId });
+    // const checkReview = await UserReview.findOne({ productId: req.body.productId, userId:  req.userId });
+    // const test = await UserReview.findOne({
+    //   where: { productId: req.body.productId , userId:  req.userId},
+    // });
+    const checkReview = await UserReview.findOne({ where: { productId: req.body.productId, userId:  req.userId } });
+    // console.log("jusr",test.toJSON());
     if (checkReview) {
       const error = new Error("You have already given your review on this product");
-      error.statusCode = 401;
+      error.statusCode = 406;
       throw error;
     }
+    // if (checkReview) {
+    //   console.log("jusr",test.toJSON());
+    //   const error = new Error("You have already given your review on this product");
+    //   error.statusCode = 401;
+    //  throw true;
+    // }
+  
     const review = await UserReview.create({
       productId: req.body.productId,
-      userId: req.userId,
+      userId:  req.userId,
       rating: req.body.rating,
       review: req.body.review,
     });
