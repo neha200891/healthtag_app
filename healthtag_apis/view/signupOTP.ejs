@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <style type="text/css" media="screen">
+      .card {
+        text-align: center;
+        margin: auto;
+        width: 700px;
+        border: 1px solid #000;
+        border-radius: 20px;
+        padding: 10px;
+        text-align: justify;
+      }
+      #over img {
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1 style="color: #00466a; text-align: center">Signup OTP</h1>
+      <table style="width: 100%">
+        <tr>
+          <td style="text-align: center">
+            <img style="height: 150px; width: 350px" src="http://164.92.227.244:2730/assets/images/logo.png" />
+          </td>
+        </tr>
+      </table>
+      <div style="font-family: Helvetica, Arial, sans-serif; line-height: 2; margin-top: 100px">
+        <div style="margin: 50px auto; width: 70%; padding: 0px 0">
+          <div style="border-bottom: 1px solid #eee">
+            <!--             <a href="" style="font-size:1.4em;color: #00466a;text-decoration:none;font-weight:600">Health Tag</a> -->
+          </div>
+          <p style="font-size: 1.1em">Hi, <%= name %></p>
+          <p>
+            You recently attempted to sign up to your Health Tag account from a new device or location. As a security
+            measure, we require additional confirmation before allowing access to your Health Tag account.
+          </p>
+          <p>
+            If you recognize this activity, please confirm it with the activation code. Here is your account activation
+            code:
+          </p>
+          <h2
+            style="
+              background: #00466a;
+              margin: 0 auto;
+              width: max-content;
+              padding: 0 10px;
+              color: #fff;
+              border-radius: 4px;
+            "
+          >
+            <%= otp %>
+          </h2>
+          <p>
+            If you don't recognize this activity, please disable your account and contact our customer support
+            immediately
+          </p>
+          <p style="font-size: 0.9em">Regards,<br />Team Health Tag</p>
+          <hr style="border: none; border-top: 1px solid #eee" />
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

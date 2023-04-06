@@ -1,0 +1,29 @@
+{
+    "App": {
+        "baseUrl": {
+            "backEndUrl": "http://localhost:48000/"
+        },
+        "email": "mohammadakram925@gmail.com",
+        "port": "4000",
+        "timeZone": "Asia/Kolkata",
+        "JwtKey": "3D0DD40D6ACEE09BB0D56659C47C5444152AD1EADC5387D017D9CFD7657FB4DB11"
+    },
+    "Email": {
+        "Host":"healthtagapps@gmail.com",
+        "username": "healthtagapps@gmail.com",
+        "password": "ajmirqbpyncycdat"
+    },
+    "database": {
+        "name": "healthtag",
+        "username": "root",
+        "password": "",
+        "host": "localhost"
+    },
+    "database1": {
+        "name": "ReactJS",
+        "username": "root",
+        "password": "Alexa123#",
+        "host": "localhost"
+    },
+    "computer-vision": "c43658a074b64cf6ba87fcd272280097"
+}
